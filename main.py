@@ -2,15 +2,15 @@ import tkinter as tk
 from tkinter import colorchooser
 from datetime import datetime
 
+
 def intro():
     print(f'Odliczanie do Dnia Słonia')
     intro_elephant = '       ╔\n╔█████■╝\n╝█████\n ╚╚ ╚╚'
     print(intro_elephant)
     print(f'\n')
 
-def update_left_time():
-    global window, left_days_label, left_hours_label, left_minutes_label, left_seconds_label, left_microseconds_label
 
+def get_left_time():
     now = datetime.now()
 
     if not (now.month == 8 and now.day == 12):
@@ -37,47 +37,84 @@ def update_left_time():
         # print(left_seconds)
         # print(left_microseconds)
 
-        left_days_label.config(text=left_days)
-        left_hours_label.config(text=left_hours)
-        left_minutes_label.config(text=left_minutes)
-        left_seconds_label.config(text=left_seconds)
-        left_microseconds_label.config(text=left_microseconds)
+        return [left_days, left_hours, left_minutes, left_seconds, left_microseconds]
     else:
-        left_days_label.config(text=0)
-        left_hours_label.config(text=0)
-        left_minutes_label.config(text=0)
-        left_seconds_label.config(text=0)
-        left_microseconds_label.config(text=0)
+        return [0, 0, 0, 0, 0]
+
+def update_left_time():
+    global window, left_days_label, left_hours_label, left_minutes_label, left_seconds_label, left_microseconds_label
+
+    left = get_left_time()
+
+    left_days_label.config(text=left[0])
+    left_hours_label.config(text=left[1])
+    left_minutes_label.config(text=left[2])
+    left_seconds_label.config(text=left[3])
+    left_microseconds_label.config(text=left[4])
 
     window.after(10, update_left_time)
+
 
 def update_fullscreen():
     global window, fullscreen
 
     window.attributes('-fullscreen', fullscreen.get())
 
+
 def update_alpha(alpha):
     global window
 
     window.attributes('-alpha', alpha)
 
-def update_background():
-    global window, title_label, left_label, left_days_text_label, left_hours_text_label, left_minutes_text_label, left_seconds_text_label, left_microseconds_text_label
 
-    rgb_color, hex_color = colorchooser.askcolor(parent=window, initialcolor=(255, 255, 255))
-    window.configure(bg=hex_color)
-    title_label.config(bg=hex_color)
-    left_label.config(bg=hex_color)
-    left_days_text_label.config(bg=hex_color)
-    left_hours_text_label.config(bg=hex_color)
-    left_minutes_text_label.config(bg=hex_color)
-    left_seconds_text_label.config(bg=hex_color)
-    left_microseconds_text_label.config(bg=hex_color)
+def update_background(objects):
+    global window, title_label, left_label, left_days_text_label, left_hours_text_label, left_minutes_text_label
+    global left_seconds_text_label, left_microseconds_text_label
+    global left_days_label, left_hours_label, left_minutes_label, left_seconds_label, left_microseconds_label
+
+    if objects == 0:
+        rgb_color, hex_color = colorchooser.askcolor(parent=window, initialcolor=(255, 255, 255), title='Wybierz kolor tła okna')
+
+        window.configure(bg=hex_color)
+        title_label.config(bg=hex_color)
+        left_label.config(bg=hex_color)
+        left_days_text_label.config(bg=hex_color)
+        left_hours_text_label.config(bg=hex_color)
+        left_minutes_text_label.config(bg=hex_color)
+        left_seconds_text_label.config(bg=hex_color)
+        left_microseconds_text_label.config(bg=hex_color)
+    elif objects == 1:
+        rgb_color, hex_color = colorchooser.askcolor(parent=window, initialcolor=(255, 255, 255), title='Wybierz kolor tekstu')
+
+        title_label.config(fg=hex_color)
+        left_label.config(fg=hex_color)
+        left_days_text_label.config(fg=hex_color)
+        left_hours_text_label.config(fg=hex_color)
+        left_minutes_text_label.config(fg=hex_color)
+        left_seconds_text_label.config(fg=hex_color)
+        left_microseconds_text_label.config(fg=hex_color)
+    elif objects == 2:
+        rgb_color, hex_color = colorchooser.askcolor(parent=window, initialcolor=(255, 255, 255), title='Wybierz kolor odliczania')
+
+        left_days_label.config(fg=hex_color)
+        left_hours_label.config(fg=hex_color)
+        left_minutes_label.config(fg=hex_color)
+        left_seconds_label.config(fg=hex_color)
+        left_microseconds_label.config(fg=hex_color)
+    elif objects == 3:
+        rgb_color, hex_color = colorchooser.askcolor(parent=window, initialcolor=(255, 255, 255), title='Wybierz kolor tła odliczania')
+
+        left_days_label.config(bg=hex_color)
+        left_hours_label.config(bg=hex_color)
+        left_minutes_label.config(bg=hex_color)
+        left_seconds_label.config(bg=hex_color)
+        left_microseconds_label.config(bg=hex_color)
 
 
 def main():
     global window, fullscreen
-    global title_label, left_label, left_days_text_label, left_hours_text_label, left_minutes_text_label, left_seconds_text_label, left_microseconds_text_label
+    global title_label, left_label, left_days_text_label, left_hours_text_label, left_minutes_text_label
+    global left_seconds_text_label, left_microseconds_text_label
     global left_days_label, left_hours_label, left_minutes_label, left_seconds_label, left_microseconds_label
 
     window = tk.Tk()
@@ -98,10 +135,10 @@ def main():
     file_menu.add_command(label='Wyjście', command=window.destroy)
     menu.add_cascade(label='Plik', menu=file_menu)
 
-    window_menu = tk.Menu(menu, tearoff=0)
-    window_menu.add_checkbutton(label="Pełny ekran", variable=fullscreen, command=update_fullscreen)
+    view_menu = tk.Menu(menu, tearoff=0)
+    view_menu.add_checkbutton(label="Pełny ekran", variable=fullscreen, command=update_fullscreen)
 
-    alpha_menu = tk.Menu(window_menu)
+    alpha_menu = tk.Menu(view_menu, tearoff=0)
     alpha_menu.add_radiobutton(label='100%', command=lambda: update_alpha(1))
     alpha_menu.add_radiobutton(label='90%', command=lambda: update_alpha(0.9))
     alpha_menu.add_radiobutton(label='80%', command=lambda: update_alpha(0.8))
@@ -113,14 +150,19 @@ def main():
     alpha_menu.add_radiobutton(label='20%', command=lambda: update_alpha(0.2))
     alpha_menu.add_radiobutton(label='10%', command=lambda: update_alpha(0.1))
     alpha_menu.add_radiobutton(label='0%', command=lambda: update_alpha(0))
-    window_menu.add_cascade(label='Przezroczystość', menu=alpha_menu)
+    view_menu.add_cascade(label='Przezroczystość', menu=alpha_menu)
 
-    window_menu.add_command(label='Kolor tła', command=update_background)
+    colors_menu = tk.Menu(view_menu, tearoff=0)
+    colors_menu.add_command(label='Kolor tła okna', command=lambda: update_background(0))
+    colors_menu.add_command(label='Kolor tekstu', command=lambda: update_background(1))
+    colors_menu.add_command(label='Kolor tekstu odliczania', command=lambda: update_background(2))
+    colors_menu.add_command(label='Kolor tła odliczania', command=lambda: update_background(3))
 
-    menu.add_cascade(label='Okno', menu=window_menu)
+    view_menu.add_cascade(label='Kolory', menu=colors_menu)
+
+    menu.add_cascade(label='Widok', menu=view_menu)
 
     window.config(menu=menu)
-
 
     title_label = tk.Label(window,
                            text='Odliczanie do Dnia Słonia',
@@ -130,10 +172,10 @@ def main():
     title_label.pack()
 
     left_label = tk.Label(window,
-                           text='Pozostało:',
-                           fg='blue',
-                           bg='light green',
-                           font=('Segoe Ui', 14))
+                          text='Pozostało:',
+                          fg='blue',
+                          bg='light green',
+                          font=('Segoe Ui', 14))
     left_label.pack()
 
     # Days
