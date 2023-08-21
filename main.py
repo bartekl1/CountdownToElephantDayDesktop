@@ -41,6 +41,7 @@ def get_left_time():
     else:
         return [0, 0, 0, 0, 0]
 
+
 def update_left_time():
     global window, left_days_label, left_hours_label, left_minutes_label, left_seconds_label, left_microseconds_label
 
@@ -67,13 +68,20 @@ def update_alpha(alpha):
     window.attributes('-alpha', alpha)
 
 
+def update_on_top():
+    global on_top
+
+    window.attributes('-topmost', on_top.get())
+
+
 def update_background(objects):
     global window, title_label, left_label, left_days_text_label, left_hours_text_label, left_minutes_text_label
     global left_seconds_text_label, left_microseconds_text_label
     global left_days_label, left_hours_label, left_minutes_label, left_seconds_label, left_microseconds_label
 
     if objects == 0:
-        rgb_color, hex_color = colorchooser.askcolor(parent=window, initialcolor=(255, 255, 255), title='Wybierz kolor tła okna')
+        rgb_color, hex_color = colorchooser.askcolor(parent=window, initialcolor=(255, 255, 255),
+                                                     title='Wybierz kolor tła okna')
 
         window.configure(bg=hex_color)
         title_label.config(bg=hex_color)
@@ -84,7 +92,8 @@ def update_background(objects):
         left_seconds_text_label.config(bg=hex_color)
         left_microseconds_text_label.config(bg=hex_color)
     elif objects == 1:
-        rgb_color, hex_color = colorchooser.askcolor(parent=window, initialcolor=(255, 255, 255), title='Wybierz kolor tekstu')
+        rgb_color, hex_color = colorchooser.askcolor(parent=window, initialcolor=(255, 255, 255),
+                                                     title='Wybierz kolor tekstu')
 
         title_label.config(fg=hex_color)
         left_label.config(fg=hex_color)
@@ -94,7 +103,8 @@ def update_background(objects):
         left_seconds_text_label.config(fg=hex_color)
         left_microseconds_text_label.config(fg=hex_color)
     elif objects == 2:
-        rgb_color, hex_color = colorchooser.askcolor(parent=window, initialcolor=(255, 255, 255), title='Wybierz kolor odliczania')
+        rgb_color, hex_color = colorchooser.askcolor(parent=window, initialcolor=(255, 255, 255),
+                                                     title='Wybierz kolor odliczania')
 
         left_days_label.config(fg=hex_color)
         left_hours_label.config(fg=hex_color)
@@ -102,17 +112,23 @@ def update_background(objects):
         left_seconds_label.config(fg=hex_color)
         left_microseconds_label.config(fg=hex_color)
     elif objects == 3:
-        rgb_color, hex_color = colorchooser.askcolor(parent=window, initialcolor=(255, 255, 255), title='Wybierz kolor tła odliczania')
+        rgb_color, hex_color = colorchooser.askcolor(parent=window, initialcolor=(255, 255, 255),
+                                                     title='Wybierz kolor tła odliczania')
 
         left_days_label.config(bg=hex_color)
         left_hours_label.config(bg=hex_color)
         left_minutes_label.config(bg=hex_color)
         left_seconds_label.config(bg=hex_color)
         left_microseconds_label.config(bg=hex_color)
+    elif objects == 4:
+        rgb_color, hex_color = colorchooser.askcolor(parent=window, initialcolor=(255, 255, 255),
+                                                     title='Wybierz kolor przezroczysty')
+
+        window.wm_attributes('-transparentcolor', hex_color)
 
 
 def main():
-    global window, fullscreen
+    global window, fullscreen, on_top
     global title_label, left_label, left_days_text_label, left_hours_text_label, left_minutes_text_label
     global left_seconds_text_label, left_microseconds_text_label
     global left_days_label, left_hours_label, left_minutes_label, left_seconds_label, left_microseconds_label
@@ -128,6 +144,7 @@ def main():
     window.config(bg='light green')
 
     fullscreen = tk.BooleanVar()
+    on_top = tk.BooleanVar()
 
     menu = tk.Menu(window)
 
@@ -137,6 +154,7 @@ def main():
 
     view_menu = tk.Menu(menu, tearoff=0)
     view_menu.add_checkbutton(label="Pełny ekran", variable=fullscreen, command=update_fullscreen)
+    view_menu.add_checkbutton(label="Wyświetlaj na górze", variable=on_top, command=update_on_top)
 
     alpha_menu = tk.Menu(view_menu, tearoff=0)
     alpha_menu.add_radiobutton(label='100%', command=lambda: update_alpha(1))
@@ -157,6 +175,7 @@ def main():
     colors_menu.add_command(label='Kolor tekstu', command=lambda: update_background(1))
     colors_menu.add_command(label='Kolor tekstu odliczania', command=lambda: update_background(2))
     colors_menu.add_command(label='Kolor tła odliczania', command=lambda: update_background(3))
+    colors_menu.add_command(label='Kolor przezroczysty', command=lambda: update_background(4))
 
     view_menu.add_cascade(label='Kolory', menu=colors_menu)
 
@@ -181,101 +200,101 @@ def main():
     # Days
 
     left_days_label = tk.Label(window,
-                              text='0',
-                              fg='dark blue',
-                              bg='green',
-                              font=('Segoe Ui', 30, 'bold'),
-                              width=7,
-                              height=1,
-                              relief='solid',
-                              borderwidth=4)
+                               text='0',
+                               fg='dark blue',
+                               bg='green',
+                               font=('Segoe Ui', 30, 'bold'),
+                               width=7,
+                               height=1,
+                               relief='solid',
+                               borderwidth=4)
     left_days_label.pack()
 
     left_days_text_label = tk.Label(window,
-                          text='dni',
-                          fg='blue',
-                          bg='light green',
-                          font=('Segoe Ui', 12))
+                                    text='dni',
+                                    fg='blue',
+                                    bg='light green',
+                                    font=('Segoe Ui', 12))
     left_days_text_label.pack()
 
     # Hours
 
     left_hours_label = tk.Label(window,
-                               text='0',
-                               fg='dark blue',
-                               bg='green',
-                               font=('Segoe Ui', 30, 'bold'),
-                               width=7,
-                               height=1,
-                               relief='solid',
-                               borderwidth=4)
+                                text='0',
+                                fg='dark blue',
+                                bg='green',
+                                font=('Segoe Ui', 30, 'bold'),
+                                width=7,
+                                height=1,
+                                relief='solid',
+                                borderwidth=4)
     left_hours_label.pack()
 
     left_hours_text_label = tk.Label(window,
-                                    text='godzin',
-                                    fg='blue',
-                                    bg='light green',
-                                    font=('Segoe Ui', 12))
+                                     text='godzin',
+                                     fg='blue',
+                                     bg='light green',
+                                     font=('Segoe Ui', 12))
     left_hours_text_label.pack()
 
     # Minutes
 
     left_minutes_label = tk.Label(window,
-                               text='0',
-                               fg='dark blue',
-                               bg='green',
-                               font=('Segoe Ui', 30, 'bold'),
-                               width=7,
-                               height=1,
-                               relief='solid',
-                               borderwidth=4)
+                                  text='0',
+                                  fg='dark blue',
+                                  bg='green',
+                                  font=('Segoe Ui', 30, 'bold'),
+                                  width=7,
+                                  height=1,
+                                  relief='solid',
+                                  borderwidth=4)
     left_minutes_label.pack()
 
     left_minutes_text_label = tk.Label(window,
-                                    text='minut',
-                                    fg='blue',
-                                    bg='light green',
-                                    font=('Segoe Ui', 12))
+                                       text='minut',
+                                       fg='blue',
+                                       bg='light green',
+                                       font=('Segoe Ui', 12))
     left_minutes_text_label.pack()
 
     # Seconds
 
     left_seconds_label = tk.Label(window,
-                               text='0',
-                               fg='dark blue',
-                               bg='green',
-                               font=('Segoe Ui', 30, 'bold'),
-                               width=7,
-                               height=1,
-                               relief='solid',
-                               borderwidth=4)
+                                  text='0',
+                                  fg='dark blue',
+                                  bg='green',
+                                  font=('Segoe Ui', 30, 'bold'),
+                                  width=7,
+                                  height=1,
+                                  relief='solid',
+                                  borderwidth=4)
     left_seconds_label.pack()
 
     left_seconds_text_label = tk.Label(window,
-                                    text='sekund',
-                                    fg='blue',
-                                    bg='light green',
-                                    font=('Segoe Ui', 12))
+                                       text='sekund',
+                                       fg='blue',
+                                       bg='light green',
+                                       font=('Segoe Ui', 12))
     left_seconds_text_label.pack()
 
     # Microseconds
 
     left_microseconds_label = tk.Label(window,
-                               text='0',
-                               fg='dark blue',
-                               bg='green',
-                               font=('Segoe Ui', 30, 'bold'),
-                               width=7,
-                               height=1,
-                               relief='solid',
-                               borderwidth=4)
+                                       text='0',
+                                       fg='dark blue',
+                                       bg='green',
+                                       font=('Segoe Ui', 30, 'bold'),
+                                       width=7,
+                                       height=1,
+                                       relief='solid',
+                                       borderwidth=4)
     left_microseconds_label.pack()
 
     left_microseconds_text_label = tk.Label(window,
-                                    text='mikrosekund',
-                                    fg='blue',
-                                    bg='light green',
-                                    font=('Segoe Ui', 12))
+                                            text='mikrosekund',
+                                            fg='blue',
+                                            bg='light green',
+                                            font=('Segoe Ui', 12))
     left_microseconds_text_label.pack()
 
     window.after(10, update_left_time)
