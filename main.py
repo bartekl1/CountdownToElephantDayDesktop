@@ -9,6 +9,9 @@ import platform
 import subprocess
 import webbrowser
 import threading
+import pytz
+import tzlocal
+import datetime
 
 VERSION = '2.0'
 
@@ -87,11 +90,96 @@ def get_setting(name):
     }[name]
 
 
+def countdown():
+    now = datetime.datetime.now(tz)
+
+    if now.month == 8 and now.day == 12:
+        days_countdown.config(text=0)
+        hours_countdown.config(text=0)
+        minutes_countdown.config(text=0)
+        seconds_countdown.config(text=0)
+        milliseconds_countdown.config(text=0)
+
+        days_label.config(text=get_text(4))
+        hours_label.config(text=get_text(6))
+        minutes_label.config(text=get_text(9))
+        seconds_label.config(text=get_text(12))
+    else:
+        if now.month < 8 or (now.month == 8 and now.day < 12):
+            elephant_day = datetime.datetime(now.year, 8, 12)
+        else:
+            elephant_day = datetime.datetime(now.year + 1, 8, 12)
+
+        elephant_day = tz.localize(elephant_day)
+
+        delta = elephant_day - now
+
+        left_days = delta.days
+        left_hours = delta.seconds // (60 ** 2)
+        left_minutes = delta.seconds % (60 ** 2) // 60
+        left_seconds = delta.seconds % (60 ** 2) % 60
+        left_milliseconds = delta.microseconds // 1000
+
+        days_countdown.config(text=left_days)
+        hours_countdown.config(text=left_hours)
+        minutes_countdown.config(text=left_minutes)
+        seconds_countdown.config(text=left_seconds)
+        milliseconds_countdown.config(text=left_milliseconds)
+
+        if left_days == 1:
+            days_label.config(text=get_text(5))
+        else:
+            days_label.config(text=get_text(4))
+
+        if left_hours == 1:
+            hours_label.config(text=get_text(8))
+        elif (len(str(left_hours)) > 1 and
+                str(left_hours)[-1] in ['2', '3', '4'] and
+                str(left_hours)[-2] != '1') or \
+            (len(str(left_hours)) == 1 and
+             str(left_hours) in ['2', '3', '4']):
+            hours_label.config(text=get_text(7))
+        else:
+            hours_label.config(text=get_text(6))
+
+        if left_minutes == 1:
+            minutes_label.config(text=get_text(11))
+        elif (len(str(left_minutes)) > 1 and
+                str(left_minutes)[-1] in ['2', '3', '4'] and
+                str(left_minutes)[-2] != '1') or \
+            (len(str(left_minutes)) == 1 and
+             str(left_minutes) in ['2', '3', '4']):
+            minutes_label.config(text=get_text(10))
+        else:
+            minutes_label.config(text=get_text(9))
+
+        if left_seconds == 1:
+            seconds_label.config(text=get_text(14))
+        elif (len(str(left_seconds)) > 1 and
+                str(left_seconds)[-1] in ['2', '3', '4'] and
+                str(left_seconds)[-2] != '1') or \
+            (len(str(left_seconds)) == 1 and
+             str(left_seconds) in ['2', '3', '4']):
+            seconds_label.config(text=get_text(13))
+        else:
+            seconds_label.config(text=get_text(12))
+
+    window.after(50, countdown)
+
+
 def main():
-    global language, window
+    global language, window, gui_frame, title_frame, title_label, icon_label, \
+        today_title_label, today_label, elephant_day_title_label, \
+        elephant_day_label, left_header_label, days_countdown, days_label, \
+        hours_countdown, hours_label, minutes_countdown, minutes_label, \
+        seconds_countdown, seconds_label, milliseconds_countdown, \
+        milliseconds_label, tz
 
     windll = ctypes.windll.kernel32
     language = locale.windows_locale[windll.GetUserDefaultUILanguage()]
+
+    tz_name = tzlocal.get_localzone_name()
+    tz = pytz.timezone(tz_name)
 
     window = tk.Tk()
 
@@ -265,6 +353,8 @@ def main():
         font=('Segoe UI', 12)
     )
     milliseconds_label.pack()
+
+    window.after(50, countdown)
 
     window.mainloop()
 
