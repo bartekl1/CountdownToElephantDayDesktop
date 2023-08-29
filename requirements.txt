@@ -1,3 +1,4 @@
+Pillow
 pytz
 tzlocal
 Babel
