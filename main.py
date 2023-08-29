@@ -12,6 +12,7 @@ import threading
 import pytz
 import tzlocal
 import datetime
+from babel.dates import format_date
 
 VERSION = '2.0'
 
@@ -94,6 +95,8 @@ def countdown():
     now = datetime.datetime.now(tz)
 
     if now.month == 8 and now.day == 12:
+        elephant_day = datetime.datetime(now.year, 8, 12)
+
         days_countdown.config(text=0)
         hours_countdown.config(text=0)
         minutes_countdown.config(text=0)
@@ -163,6 +166,18 @@ def countdown():
             seconds_label.config(text=get_text(13))
         else:
             seconds_label.config(text=get_text(12))
+
+    now_date = format_date(
+        now,
+        format='full',
+        locale=language) + ' ' + now.strftime('%H:%M:%S')
+    elephant_day_date = format_date(
+        elephant_day,
+        format='full',
+        locale=language)
+
+    today_label.config(text=now_date)
+    elephant_day_label.config(text=elephant_day_date)
 
     window.after(50, countdown)
 
