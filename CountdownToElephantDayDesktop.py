@@ -14,6 +14,7 @@ import pytz
 import tzlocal
 import datetime
 from babel.dates import format_date
+import json
 
 VERSION = '2.0'
 
@@ -44,7 +45,16 @@ POLISH_TEXT = [
     'Sprawdź aktualizacje',
     'Pomoc',
     'Autor',
-    'Wersja'
+    'Wersja',
+    'Błąd',
+    'Nie udało się sprawdzić dostępności aktualizacji.',
+    'Aktualizacja',
+    'Masz najnowszą wersję.',
+    'Dostępna jest aktualizacja.',
+    'Bieżąca wersja',
+    'Najnowsza wersja',
+    'wydana',
+    'Czy chcesz ją pobrać?'
 ]
 
 ENGLISH_TEXT = [
@@ -71,7 +81,15 @@ ENGLISH_TEXT = [
     'Check updates',
     'Help',
     'Author',
-    'Version'
+    'Version',
+    'Can\'t check for updates.',
+    'Update',
+    'Your version is up to date.'
+    'An update is available.',
+    'Current version',
+    'Latest version',
+    'released',
+    'Do you want to download it?'
 ]
 
 
@@ -198,16 +216,81 @@ def countdown():
 
     window.after(50, countdown)
 
+
 def info():
     information = f'''Countdown To Elephant Day Desktop
 {get_text(22)}: @{GITHUB_REPO_OWNER}
 {get_text(23)}: {VERSION}'''
     messagebox.showinfo(title=get_text(18), message=information)
 
+
 def github_repo():
     webbrowser.open(
         f'https://github.com/{GITHUB_REPO_OWNER}/{GITHUB_REPO_NAME}',
         new=2)
+
+
+def check_for_updates(information=True):
+    fp = os.path.join(os.environ.get('APPDATA'),
+                      GITHUB_REPO_OWNER, GITHUB_REPO_NAME,
+                      'cache_newest_version.json')
+
+    if os.path.isfile(fp):
+        with open(fp) as file:
+            newest_version = json.load(file)
+        headers = {'If-None-Match': newest_version['etag']}
+    else:
+        headers = {}
+
+    try:
+        r = requests.get(
+            f'https://api.github.com/repos/{GITHUB_REPO_OWNER}/{GITHUB_REPO_NAME}/releases/latest',
+            headers=headers)
+    except Exception:
+        if information:
+            messagebox.showerror(get_text(24), get_text(25))
+    else:
+        if r.status_code == 200:
+            rj = r.json()
+
+            newest_version = {
+                'version': rj['name'],
+                'description': rj['body'],
+                'published_at': rj['published_at'],
+                'etag': r.headers.get('etag')
+            }
+
+            with open(fp, 'w') as file:
+                json.dump(newest_version, file, indent=4)
+        elif r.status_code == 304:
+            with open(fp) as file:
+                newest_version = json.load(file)
+        else:
+            newest_version = None
+
+        if newest_version is None:
+            if information:
+                messagebox.showerror(get_text(24), get_text(25))
+        elif VERSION == newest_version['version']:
+            if information:
+                messagebox.showinfo(get_text(26), get_text(27))
+        else:
+            release_date_dt = datetime.datetime.fromisoformat(
+                newest_version['published_at'])
+            release_date = format_date(
+                release_date_dt,
+                format='full',
+                locale=language) + ' ' + release_date_dt.strftime('%H:%M:%S')
+            update_info = f'''{get_text(28)}
+{get_text(29)}: {VERSION}
+{get_text(30)}: {newest_version['version']} ({get_text(31)} {release_date})
+{get_text(32)}'''
+            response = messagebox.askyesno(get_text(26), update_info)
+
+            if response:
+                webbrowser.open(
+                    f'https://github.com/{GITHUB_REPO_OWNER}/{GITHUB_REPO_NAME}/releases/latest',
+                    new=2)
 
 
 def main():
@@ -244,7 +327,7 @@ def main():
     help_menu.add_command(label=get_text(18), command=info)
     help_menu.add_command(label=get_text(19), command=github_repo)
     help_menu.add_separator()
-    help_menu.add_command(label=get_text(20), command=None)
+    help_menu.add_command(label=get_text(20), command=check_for_updates)
     menu.add_cascade(label=get_text(21), menu=help_menu)
 
     gui_frame = tk.Frame(window, background=get_setting('background_color'))

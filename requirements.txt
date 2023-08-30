@@ -2,3 +2,4 @@ Pillow
 pytz
 tzlocal
 Babel
+requests
