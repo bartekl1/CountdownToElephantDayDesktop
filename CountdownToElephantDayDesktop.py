@@ -359,9 +359,10 @@ def snap_direction():
         'center': 0.5
     }
 
-    gui_frame.place(relx=relx[snap_direction_var.get()], 
-                    rely=rely[snap_direction_var.get()], 
+    gui_frame.place(relx=relx[snap_direction_var.get()],
+                    rely=rely[snap_direction_var.get()],
                     anchor=snap_direction_var.get())
+
 
 def main():
     global language, window, gui_frame, title_frame, title_label, icon_label, \
@@ -661,7 +662,10 @@ def main():
     )
     milliseconds_label.pack()
 
-    window.after(50, countdown)
+    window.after(0, countdown)
+
+    t = threading.Thread(target=lambda: check_for_updates(information=False))
+    t.start()
 
     window.mainloop()
 
