@@ -82,7 +82,8 @@ POLISH_TEXT = [
     'Kolor tła odliczania',
     'Wybierz kolor',
     'Grubość ramki odliczania',
-    'Podaj grubość ramki odliczania (px)'
+    'Podaj grubość ramki odliczania (px)',
+    'Styl ramki odliczania'
 ]
 
 ENGLISH_TEXT = [
@@ -144,7 +145,8 @@ ENGLISH_TEXT = [
     'Countdown background color',
     'Chose color',
     'Countdown border width',
-    'Enter countdown border width (px)'
+    'Enter countdown border width (px)',
+    'Countdown border style'
 ]
 
 
@@ -543,6 +545,14 @@ def countdown_border_width():
         seconds_countdown.config(borderwidth=response)
         milliseconds_countdown.config(borderwidth=response)
 
+def countdown_border_style():
+    style = countdown_border_style_var.get()
+
+    days_countdown.config(relief=style)
+    hours_countdown.config(relief=style)
+    minutes_countdown.config(relief=style)
+    seconds_countdown.config(relief=style)
+    milliseconds_countdown.config(relief=style)
 
 def main():
     global language, window, gui_frame, title_frame, title_label, icon_label, \
@@ -632,6 +642,34 @@ Linux support is planned.'''
                           command=lambda: change_color('countdown_background'))
     view_menu.add_command(label=get_text(58),
                           command=countdown_border_width)
+    
+    border_style_menu = tk.Menu(view_menu, tearoff=0)
+    border_style_menu.add_radiobutton(label='solid',
+                                      var=countdown_border_style_var,
+                                      value='solid',
+                                      command=countdown_border_style)
+    border_style_menu.add_radiobutton(label='flat',
+                                      var=countdown_border_style_var,
+                                      value='flat',
+                                      command=countdown_border_style)
+    border_style_menu.add_radiobutton(label='raised',
+                                      var=countdown_border_style_var,
+                                      value='raised',
+                                      command=countdown_border_style)
+    border_style_menu.add_radiobutton(label='sunken',
+                                      var=countdown_border_style_var,
+                                      value='sunken',
+                                      command=countdown_border_style)
+    border_style_menu.add_radiobutton(label='ridge',
+                                      var=countdown_border_style_var,
+                                      value='ridge',
+                                      command=countdown_border_style)
+    border_style_menu.add_radiobutton(label='groove',
+                                      var=countdown_border_style_var,
+                                      value='groove',
+                                      command=countdown_border_style)
+    view_menu.add_cascade(label=get_text(60), menu=border_style_menu)
+
     menu.add_cascade(label=get_text(47), menu=view_menu)
 
     window_menu = tk.Menu(menu, tearoff=0)
