@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, colorchooser
 from PIL import Image, ImageTk
 
 from babel.dates import format_date
@@ -69,7 +69,18 @@ POLISH_TEXT = [
     'Lewy dolny róg',
     'Prawy dolny róg',
     'Środek',
-    'Kierunek przyciągania'
+    'Kierunek przyciągania',
+    'Widok',
+    'Kolor tła okna',
+    'Przezroczyste tło okna',
+    'Kolor tytułu',
+    'Kolor etykiet dat',
+    'Kolor dat',
+    'Kolor nagłówka "Pozostało:"',
+    'Kolor etykiet jednostek czasu',
+    'Kolor tekstu odliczania',
+    'Kolor tła odliczania',
+    'Wybierz kolor'
 ]
 
 ENGLISH_TEXT = [
@@ -118,7 +129,18 @@ ENGLISH_TEXT = [
     'Bottom left',
     'Bottom right',
     'Center',
-    'Snap direction'
+    'Snap direction',
+    'View',
+    'Window background color',
+    'Transparent window background',
+    'Title color',
+    'Date labels colors',
+    'Dates colors',
+    'Header "Left:" color',
+    'Time unit labels color',
+    'Countdown text color',
+    'Countdown background color',
+    'Chose color'
 ]
 
 
@@ -138,21 +160,6 @@ def get_text(text_number):
         return POLISH_TEXT[text_number]
     else:
         return ENGLISH_TEXT[text_number]
-
-
-def get_setting(name):
-    return {
-        'background_color': '#9acd32',
-        'title_color': '#0000ff',
-        'date_title_color': '#0000ff',
-        'date_color': '#0000ff',
-        'left_header_color': '#0000ff',
-        'countdown_text_color': '#000072',
-        'countdown_background_color': '#007a00',
-        'countdown_border_width': 5,
-        'countdown_border_style': 'solid',
-        'unit_labels_color': '#0000ff'
-    }[name]
 
 
 def countdown():
@@ -365,6 +372,93 @@ def snap_direction():
                     anchor=snap_direction_var.get())
 
 
+def change_color(element):
+    if element == 'background':
+        initial_color = background_color_var.get()
+    elif element == 'title':
+        initial_color = title_color_var.get()
+    elif element == 'date_title':
+        initial_color = date_title_color_var.get()
+    elif element == 'date':
+        initial_color = date_color_var.get()
+    elif element == 'left_header':
+        initial_color = left_header_color_var.get()
+    elif element == 'countdown_text':
+        initial_color = countdown_text_color_var.get()
+    elif element == 'countdown_background':
+        initial_color = countdown_background_color_var.get()
+    elif element == 'unit_labels':
+        initial_color = unit_labels_color_var.get()
+
+    color = colorchooser.askcolor(title=get_text(57),
+                                  initialcolor=initial_color)
+    
+    if element == 'background':
+        background_color_var.set(color[1])
+
+        window.config(bg=color[1])
+        gui_frame.config(bg=color[1])
+        title_frame.config(bg=color[1])
+        title_label.config(bg=color[1])
+        icon_label.config(bg=color[1])
+        today_title_label.config(bg=color[1])
+        today_label.config(bg=color[1])
+        elephant_day_title_label.config(bg=color[1])
+        elephant_day_label.config(bg=color[1])
+        left_header_label.config(bg=color[1])
+        days_label.config(bg=color[1])
+        hours_label.config(bg=color[1])
+        minutes_label.config(bg=color[1])
+        seconds_label.config(bg=color[1])
+        milliseconds_label.config(bg=color[1])
+    elif element == 'title':
+        title_color_var.set(color[1])
+
+        title_label.config(fg=color[1])
+    elif element == 'date_title':
+        date_title_color_var.set(color[1])
+
+        today_title_label.config(fg=color[1])
+        elephant_day_title_label.config(fg=color[1])
+    elif element == 'date':
+        date_color_var.set(color[1])
+
+        today_label.config(fg=color[1])
+        elephant_day_label.config(fg=color[1])
+    elif element == 'left_header':
+        left_header_color_var.set(color[1])
+
+        left_header_label.config(fg=color[1])
+    elif element == 'unit_labels':
+        unit_labels_color_var.set(color[1])
+
+        days_label.config(fg=color[1])
+        hours_label.config(fg=color[1])
+        minutes_label.config(fg=color[1])
+        seconds_label.config(fg=color[1])
+        milliseconds_label.config(fg=color[1])
+    elif element == 'countdown_text':
+        countdown_text_color_var.set(color[1])
+
+        days_countdown.config(fg=color[1])
+        hours_countdown.config(fg=color[1])
+        minutes_countdown.config(fg=color[1])
+        seconds_countdown.config(fg=color[1])
+        milliseconds_countdown.config(fg=color[1])
+    elif element == 'countdown_background':
+        countdown_background_color_var.set(color[1])
+
+        days_countdown.config(bg=color[1])
+        hours_countdown.config(bg=color[1])
+        minutes_countdown.config(bg=color[1])
+        seconds_countdown.config(bg=color[1])
+        milliseconds_countdown.config(bg=color[1])
+
+
+def transparent_background():
+    pass
+
+
 def main():
     global language, window, gui_frame, title_frame, title_label, icon_label, \
         today_title_label, today_label, elephant_day_title_label, \
@@ -372,7 +466,12 @@ def main():
         hours_countdown, hours_label, minutes_countdown, minutes_label, \
         seconds_countdown, seconds_label, milliseconds_countdown, \
         milliseconds_label, tz, full_screen_var, always_on_top_var, \
-        transparency_var, snap_direction_var
+        transparency_var, snap_direction_var, background_color_var, \
+        title_color_var, date_title_color_var, date_color_var, \
+        left_header_color_var, countdown_text_color_var, \
+        countdown_background_color_var, countdown_border_width_var, \
+        countdown_border_style_var, unit_labels_color_var, \
+        transparent_background_var
 
     system = platform.system()
 
@@ -397,12 +496,25 @@ Linux support is planned.'''
     window.title(get_text(0))
     window.iconbitmap(resource_path('img/elephant.ico'))
 
-    window.config(bg=get_setting('background_color'))
-
     full_screen_var = tk.BooleanVar(window, False)
     always_on_top_var = tk.BooleanVar(window, False)
     transparency_var = tk.DoubleVar(window, 0)
     snap_direction_var = tk.StringVar(window, 'n')
+
+    background_color_var = tk.StringVar(window, '#9acd32')
+    title_color_var = tk.StringVar(window, '#0000ff')
+    date_title_color_var = tk.StringVar(window, '#0000ff')
+    date_color_var = tk.StringVar(window, '#0000ff')
+    left_header_color_var = tk.StringVar(window, '#0000ff')
+    countdown_text_color_var = tk.StringVar(window, '#000072')
+    countdown_background_color_var = tk.StringVar(window,  '#007a00')
+    countdown_border_width_var = tk.IntVar(window, 5)
+    countdown_border_style_var = tk.StringVar(window, 'solid')
+    unit_labels_color_var = tk.StringVar(window, '#0000ff')
+
+    transparent_background_var = tk.BooleanVar(window, False)
+
+    window.config(bg=background_color_var.get())
 
     menu = tk.Menu(window)
     window.config(menu=menu)
@@ -410,6 +522,30 @@ Linux support is planned.'''
     file_menu = tk.Menu(menu, tearoff=0)
     file_menu.add_command(label=get_text(16), command=window.destroy)
     menu.add_cascade(label=get_text(17), menu=file_menu)
+
+    view_menu = tk.Menu(menu, tearoff=0)
+    view_menu.add_command(label=get_text(48),
+                          command=lambda: change_color('background'))
+    view_menu.add_checkbutton(label=get_text(49),
+                              variable=transparent_background_var,
+                              command=transparent_background)
+    view_menu.add_separator()
+    view_menu.add_command(label=get_text(50),
+                          command=lambda: change_color('title'))
+    view_menu.add_command(label=get_text(51),
+                          command=lambda: change_color('date_title'))
+    view_menu.add_command(label=get_text(52),
+                          command=lambda: change_color('date'))
+    view_menu.add_command(label=get_text(53),
+                          command=lambda: change_color('left_header'))
+    view_menu.add_command(label=get_text(54),
+                          command=lambda: change_color('unit_labels'))
+    view_menu.add_separator()
+    view_menu.add_command(label=get_text(55),
+                          command=lambda: change_color('countdown_text'))
+    view_menu.add_command(label=get_text(56),
+                          command=lambda: change_color('countdown_background'))
+    menu.add_cascade(label=get_text(47), menu=view_menu)
 
     window_menu = tk.Menu(menu, tearoff=0)
     window_menu.add_checkbutton(label=get_text(33),
@@ -509,18 +645,18 @@ Linux support is planned.'''
     help_menu.add_command(label=get_text(20), command=check_for_updates)
     menu.add_cascade(label=get_text(21), menu=help_menu)
 
-    gui_frame = tk.Frame(window, background=get_setting('background_color'))
+    gui_frame = tk.Frame(window, background=background_color_var.get())
     gui_frame.place(relx=0.5, rely=0, anchor='n')
 
     title_frame = tk.Frame(
-        gui_frame, background=get_setting('background_color'))
+        gui_frame, background=background_color_var.get())
     title_frame.pack()
 
     title_label = tk.Label(
         title_frame,
         text=get_text(0),
-        background=get_setting('background_color'),
-        foreground=get_setting('title_color'),
+        background=background_color_var.get(),
+        foreground=title_color_var.get(),
         font=('Segoe UI', 26)
     )
     title_label.pack(side='left')
@@ -530,23 +666,23 @@ Linux support is planned.'''
     icon_label = tk.Label(
         title_frame,
         image=icon_img,
-        background=get_setting('background_color')
+        background=background_color_var.get()
     )
     icon_label.pack(side='left')
 
     today_title_label = tk.Label(
         gui_frame,
         text=get_text(1),
-        background=get_setting('background_color'),
-        foreground=get_setting('date_title_color'),
+        background=background_color_var.get(),
+        foreground=date_title_color_var.get(),
         font=('Segoe UI', 12, 'bold')
     )
     today_title_label.pack()
 
     today_label = tk.Label(
         gui_frame,
-        background=get_setting('background_color'),
-        foreground=get_setting('date_color'),
+        background=background_color_var.get(),
+        foreground=date_color_var.get(),
         font=('Segoe UI', 12)
     )
     today_label.pack()
@@ -554,16 +690,16 @@ Linux support is planned.'''
     elephant_day_title_label = tk.Label(
         gui_frame,
         text=get_text(2),
-        background=get_setting('background_color'),
-        foreground=get_setting('date_title_color'),
+        background=background_color_var.get(),
+        foreground=date_title_color_var.get(),
         font=('Segoe UI', 12, 'bold')
     )
     elephant_day_title_label.pack()
 
     elephant_day_label = tk.Label(
         gui_frame,
-        background=get_setting('background_color'),
-        foreground=get_setting('date_color'),
+        background=background_color_var.get(),
+        foreground=date_color_var.get(),
         font=('Segoe UI', 12)
     )
     elephant_day_label.pack()
@@ -571,104 +707,104 @@ Linux support is planned.'''
     left_header_label = tk.Label(
         gui_frame,
         text=get_text(3),
-        background=get_setting('background_color'),
-        foreground=get_setting('left_header_color'),
+        background=background_color_var.get(),
+        foreground=left_header_color_var.get(),
         font=('Segoe UI', 18)
     )
     left_header_label.pack()
 
     days_countdown = tk.Label(
         gui_frame,
-        background=get_setting('countdown_background_color'),
-        foreground=get_setting('countdown_text_color'),
+        background=countdown_background_color_var.get(),
+        foreground=countdown_text_color_var.get(),
         font=('Segoe UI', 26, 'bold'),
         width=7,
-        borderwidth=get_setting('countdown_border_width'),
-        relief=get_setting('countdown_border_style')
+        borderwidth=countdown_border_width_var.get(),
+        relief=countdown_border_style_var.get()
     )
     days_countdown.pack()
 
     days_label = tk.Label(
         gui_frame,
-        background=get_setting('background_color'),
-        foreground=get_setting('date_color'),
+        background=background_color_var.get(),
+        foreground=unit_labels_color_var.get(),
         font=('Segoe UI', 12)
     )
     days_label.pack()
 
     hours_countdown = tk.Label(
         gui_frame,
-        background=get_setting('countdown_background_color'),
-        foreground=get_setting('countdown_text_color'),
+        background=countdown_background_color_var.get(),
+        foreground=countdown_text_color_var.get(),
         font=('Segoe UI', 26, 'bold'),
         width=7,
-        borderwidth=get_setting('countdown_border_width'),
-        relief=get_setting('countdown_border_style')
+        borderwidth=countdown_border_width_var.get(),
+        relief=countdown_border_style_var.get()
     )
     hours_countdown.pack()
 
     hours_label = tk.Label(
         gui_frame,
-        background=get_setting('background_color'),
-        foreground=get_setting('date_color'),
+        background=background_color_var.get(),
+        foreground=unit_labels_color_var.get(),
         font=('Segoe UI', 12)
     )
     hours_label.pack()
 
     minutes_countdown = tk.Label(
         gui_frame,
-        background=get_setting('countdown_background_color'),
-        foreground=get_setting('countdown_text_color'),
+        background=countdown_background_color_var.get(),
+        foreground=countdown_text_color_var.get(),
         font=('Segoe UI', 26, 'bold'),
         width=7,
-        borderwidth=get_setting('countdown_border_width'),
-        relief=get_setting('countdown_border_style')
+        borderwidth=countdown_border_width_var.get(),
+        relief=countdown_border_style_var.get()
     )
     minutes_countdown.pack()
 
     minutes_label = tk.Label(
         gui_frame,
-        background=get_setting('background_color'),
-        foreground=get_setting('date_color'),
+        background=background_color_var.get(),
+        foreground=unit_labels_color_var.get(),
         font=('Segoe UI', 12)
     )
     minutes_label.pack()
 
     seconds_countdown = tk.Label(
         gui_frame,
-        background=get_setting('countdown_background_color'),
-        foreground=get_setting('countdown_text_color'),
+        background=countdown_background_color_var.get(),
+        foreground=countdown_text_color_var.get(),
         font=('Segoe UI', 26, 'bold'),
         width=7,
-        borderwidth=get_setting('countdown_border_width'),
-        relief=get_setting('countdown_border_style')
+        borderwidth=countdown_border_width_var.get(),
+        relief=countdown_border_style_var.get()
     )
     seconds_countdown.pack()
 
     seconds_label = tk.Label(
         gui_frame,
-        background=get_setting('background_color'),
-        foreground=get_setting('date_color'),
+        background=background_color_var.get(),
+        foreground=unit_labels_color_var.get(),
         font=('Segoe UI', 12)
     )
     seconds_label.pack()
 
     milliseconds_countdown = tk.Label(
         gui_frame,
-        background=get_setting('countdown_background_color'),
-        foreground=get_setting('countdown_text_color'),
+        background=countdown_background_color_var.get(),
+        foreground=countdown_text_color_var.get(),
         font=('Segoe UI', 26, 'bold'),
         width=7,
-        borderwidth=get_setting('countdown_border_width'),
-        relief=get_setting('countdown_border_style')
+        borderwidth=countdown_border_width_var.get(),
+        relief=countdown_border_style_var.get()
     )
     milliseconds_countdown.pack()
 
     milliseconds_label = tk.Label(
         gui_frame,
         text=get_text(15),
-        background=get_setting('background_color'),
-        foreground=get_setting('date_color'),
+        background=background_color_var.get(),
+        foreground=unit_labels_color_var.get(),
         font=('Segoe UI', 12)
     )
     milliseconds_label.pack()
