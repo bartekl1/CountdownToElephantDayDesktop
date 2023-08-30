@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox, colorchooser
+from tkinter import messagebox, colorchooser, simpledialog
 from PIL import Image, ImageTk
 
 from babel.dates import format_date
@@ -80,7 +80,9 @@ POLISH_TEXT = [
     'Kolor etykiet jednostek czasu',
     'Kolor tekstu odliczania',
     'Kolor tła odliczania',
-    'Wybierz kolor'
+    'Wybierz kolor',
+    'Grubość ramki odliczania',
+    'Podaj grubość ramki odliczania (px)'
 ]
 
 ENGLISH_TEXT = [
@@ -140,7 +142,9 @@ ENGLISH_TEXT = [
     'Time unit labels color',
     'Countdown text color',
     'Countdown background color',
-    'Chose color'
+    'Chose color',
+    'Countdown border width',
+    'Enter countdown border width (px)'
 ]
 
 
@@ -525,6 +529,21 @@ def transparent_background():
         window.wm_attributes('-transparentcolor', None)
 
 
+def countdown_border_width():
+    initial_value = countdown_border_width_var.get()
+    response = simpledialog.askinteger(get_text(58), get_text(59),
+                                       initialvalue=initial_value, minvalue=0)
+
+    if response is not None:
+        countdown_border_width_var.set(response)
+
+        days_countdown.config(borderwidth=response)
+        hours_countdown.config(borderwidth=response)
+        minutes_countdown.config(borderwidth=response)
+        seconds_countdown.config(borderwidth=response)
+        milliseconds_countdown.config(borderwidth=response)
+
+
 def main():
     global language, window, gui_frame, title_frame, title_label, icon_label, \
         today_title_label, today_label, elephant_day_title_label, \
@@ -560,7 +579,7 @@ Linux support is planned.'''
     window.minsize(448, 630)
 
     window.title(get_text(0))
-    window.iconbitmap(resource_path('img/elephant.ico'))
+    window.iconbitmap(default=resource_path('img/elephant.ico'))
 
     full_screen_var = tk.BooleanVar(window, False)
     always_on_top_var = tk.BooleanVar(window, False)
@@ -611,6 +630,8 @@ Linux support is planned.'''
                           command=lambda: change_color('countdown_text'))
     view_menu.add_command(label=get_text(56),
                           command=lambda: change_color('countdown_background'))
+    view_menu.add_command(label=get_text(58),
+                          command=countdown_border_width)
     menu.add_cascade(label=get_text(47), menu=view_menu)
 
     window_menu = tk.Menu(menu, tearoff=0)
