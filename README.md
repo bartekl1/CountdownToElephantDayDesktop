@@ -9,5 +9,4 @@
 
 - 📖 Documentation is available [here](https://github.com/bartekl1/CountdownToElephantDayDesktop/wiki).
 - 🧾 Changelog is available [here](CHANGELOG.md).
-- 📚 Libraries info is available [here](LIBRARIES.md).
 - 🇵🇱 Polish version of README is available [here](README_PL.md).

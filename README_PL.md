@@ -9,4 +9,3 @@
 
 - 📖 Dokumentacja jest dostępna [tutaj](https://github.com/bartekl1/CountdownToElephantDayDesktop/wiki).
 - 🧾 Rejestr zmian jest dostępny [tutaj](CHANGELOG_PL.md).
-- 📚 Informacja o bibliotekach jest dostępna [tutaj](LIBRARIES.md).
