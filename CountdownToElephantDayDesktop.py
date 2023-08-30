@@ -58,7 +58,17 @@ POLISH_TEXT = [
     'Pełny ekran',
     'Okno',
     'Zawsze na wierzchu',
-    'Przezroczystość'
+    'Przezroczystość',
+    'Góra',
+    'Dół',
+    'Lewo',
+    'Prawo',
+    'Lewy górny róg',
+    'Prawy górny róg',
+    'Lewy dolny róg',
+    'Prawy dolny róg',
+    'Środek',
+    'Kierunek przyciągania'
 ]
 
 ENGLISH_TEXT = [
@@ -98,6 +108,16 @@ ENGLISH_TEXT = [
     'Window',
     'Always on top',
     'Transparency'
+    'Top',
+    'Bottom',
+    'Left',
+    'Right',
+    'Top left',
+    'Top right',
+    'Bottom left',
+    'Bottom right',
+    'Center',
+    'Snap direction'
 ]
 
 
@@ -313,6 +333,36 @@ def transparency():
     window.attributes('-alpha', 1 - transparency_var.get())
 
 
+def snap_direction():
+    gui_frame.place_forget()
+
+    relx = {
+        'n': 0.5,
+        's': 0.5,
+        'w': 0,
+        'e': 1,
+        'nw': 0,
+        'ne': 1,
+        'sw': 0,
+        'se': 1,
+        'center': 0.5
+    }
+    rely = {
+        'n': 0,
+        's': 1,
+        'w': 0.5,
+        'e': 0.5,
+        'nw': 0,
+        'ne': 0,
+        'sw': 1,
+        'se': 1,
+        'center': 0.5
+    }
+
+    gui_frame.place(relx=relx[snap_direction_var.get()], 
+                    rely=rely[snap_direction_var.get()], 
+                    anchor=snap_direction_var.get())
+
 def main():
     global language, window, gui_frame, title_frame, title_label, icon_label, \
         today_title_label, today_label, elephant_day_title_label, \
@@ -320,7 +370,7 @@ def main():
         hours_countdown, hours_label, minutes_countdown, minutes_label, \
         seconds_countdown, seconds_label, milliseconds_countdown, \
         milliseconds_label, tz, full_screen_var, always_on_top_var, \
-        transparency_var
+        transparency_var, snap_direction_var
 
     windll = ctypes.windll.kernel32
     language = locale.windows_locale[windll.GetUserDefaultUILanguage()]
@@ -340,6 +390,7 @@ def main():
     full_screen_var = tk.BooleanVar(window, False)
     always_on_top_var = tk.BooleanVar(window, False)
     transparency_var = tk.DoubleVar(window, 0)
+    snap_direction_var = tk.StringVar(window, 'n')
 
     menu = tk.Menu(window)
     window.config(menu=menu)
@@ -398,6 +449,45 @@ def main():
                                       command=transparency)
     window_menu.add_cascade(label=get_text(36), menu=transparency_menu)
 
+    snap_direction_menu = tk.Menu(window_menu, tearoff=0)
+    snap_direction_menu.add_radiobutton(label=get_text(37),
+                                        var=snap_direction_var,
+                                        value='n',
+                                        command=snap_direction)
+    snap_direction_menu.add_radiobutton(label=get_text(38),
+                                        var=snap_direction_var,
+                                        value='s',
+                                        command=snap_direction)
+    snap_direction_menu.add_radiobutton(label=get_text(39),
+                                        var=snap_direction_var,
+                                        value='w',
+                                        command=snap_direction)
+    snap_direction_menu.add_radiobutton(label=get_text(40),
+                                        var=snap_direction_var,
+                                        value='e',
+                                        command=snap_direction)
+    snap_direction_menu.add_radiobutton(label=get_text(41),
+                                        var=snap_direction_var,
+                                        value='nw',
+                                        command=snap_direction)
+    snap_direction_menu.add_radiobutton(label=get_text(42),
+                                        var=snap_direction_var,
+                                        value='ne',
+                                        command=snap_direction)
+    snap_direction_menu.add_radiobutton(label=get_text(43),
+                                        var=snap_direction_var,
+                                        value='sw',
+                                        command=snap_direction)
+    snap_direction_menu.add_radiobutton(label=get_text(44),
+                                        var=snap_direction_var,
+                                        value='se',
+                                        command=snap_direction)
+    snap_direction_menu.add_radiobutton(label=get_text(45),
+                                        var=snap_direction_var,
+                                        value='center',
+                                        command=snap_direction)
+    window_menu.add_cascade(label=get_text(46), menu=snap_direction_menu)
+
     menu.add_cascade(label=get_text(34), menu=window_menu)
 
     help_menu = tk.Menu(menu, tearoff=0)
@@ -408,7 +498,7 @@ def main():
     menu.add_cascade(label=get_text(21), menu=help_menu)
 
     gui_frame = tk.Frame(window, background=get_setting('background_color'))
-    gui_frame.pack()
+    gui_frame.place(relx=0.5, rely=0, anchor='n')
 
     title_frame = tk.Frame(
         gui_frame, background=get_setting('background_color'))
