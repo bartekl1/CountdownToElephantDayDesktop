@@ -56,7 +56,8 @@ POLISH_TEXT = [
     'wydana',
     'Czy chcesz ją pobrać?',
     'Pełny ekran',
-    'Okno'
+    'Okno',
+    'Zawsze na wierzchu'
 ]
 
 ENGLISH_TEXT = [
@@ -93,7 +94,8 @@ ENGLISH_TEXT = [
     'released',
     'Do you want to download it?',
     'Full screen',
-    'Window'
+    'Window',
+    'Always on top'
 ]
 
 
@@ -296,8 +298,13 @@ def check_for_updates(information=True):
                     f'https://github.com/{GITHUB_REPO_OWNER}/{GITHUB_REPO_NAME}/releases/latest',
                     new=2)
 
+
 def full_screen():
     window.attributes('-fullscreen', full_screen_var.get())
+
+
+def always_on_top():
+    window.attributes('-topmost', always_on_top_var.get())
 
 
 def main():
@@ -306,7 +313,7 @@ def main():
         elephant_day_label, left_header_label, days_countdown, days_label, \
         hours_countdown, hours_label, minutes_countdown, minutes_label, \
         seconds_countdown, seconds_label, milliseconds_countdown, \
-        milliseconds_label, tz, full_screen_var
+        milliseconds_label, tz, full_screen_var, always_on_top_var
 
     windll = ctypes.windll.kernel32
     language = locale.windows_locale[windll.GetUserDefaultUILanguage()]
@@ -324,6 +331,7 @@ def main():
     window.config(bg=get_setting('background_color'))
 
     full_screen_var = tk.BooleanVar(window, False)
+    always_on_top_var = tk.BooleanVar(window, False)
 
     menu = tk.Menu(window)
     window.config(menu=menu)
@@ -335,6 +343,9 @@ def main():
     window_menu = tk.Menu(menu, tearoff=0)
     window_menu.add_checkbutton(label=get_text(33),
                                 variable=full_screen_var, command=full_screen)
+    window_menu.add_checkbutton(label=get_text(35),
+                                variable=always_on_top_var,
+                                command=always_on_top)
     menu.add_cascade(label=get_text(34), menu=window_menu)
 
     help_menu = tk.Menu(menu, tearoff=0)
