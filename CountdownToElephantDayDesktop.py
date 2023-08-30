@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 from PIL import Image, ImageTk
 import ctypes
 import requests
@@ -35,7 +36,15 @@ POLISH_TEXT = [
     'sekund',
     'sekundy',
     'sekunda',
-    'milisekund'
+    'milisekund',
+    'Zakończ',
+    'Plik',
+    'Informacje',
+    'Repozytorium GitHub',
+    'Sprawdź aktualizacje',
+    'Pomoc',
+    'Autor',
+    'Wersja'
 ]
 
 ENGLISH_TEXT = [
@@ -54,7 +63,15 @@ ENGLISH_TEXT = [
     'seconds',
     'seconds',
     'second',
-    'milliseconds'
+    'milliseconds',
+    'Exit',
+    'File',
+    'Information',
+    'GitHub repository',
+    'Check updates',
+    'Help',
+    'Author',
+    'Version'
 ]
 
 
@@ -181,6 +198,17 @@ def countdown():
 
     window.after(50, countdown)
 
+def info():
+    information = f'''Countdown To Elephant Day Desktop
+{get_text(22)}: @{GITHUB_REPO_OWNER}
+{get_text(23)}: {VERSION}'''
+    messagebox.showinfo(title=get_text(18), message=information)
+
+def github_repo():
+    webbrowser.open(
+        f'https://github.com/{GITHUB_REPO_OWNER}/{GITHUB_REPO_NAME}',
+        new=2)
+
 
 def main():
     global language, window, gui_frame, title_frame, title_label, icon_label, \
@@ -204,6 +232,20 @@ def main():
     window.iconbitmap(resource_path('img/elephant.ico'))
 
     window.config(bg=get_setting('background_color'))
+
+    menu = tk.Menu(window)
+    window.config(menu=menu)
+
+    file_menu = tk.Menu(menu, tearoff=0)
+    file_menu.add_command(label=get_text(16), command=window.destroy)
+    menu.add_cascade(label=get_text(17), menu=file_menu)
+
+    help_menu = tk.Menu(menu, tearoff=0)
+    help_menu.add_command(label=get_text(18), command=info)
+    help_menu.add_command(label=get_text(19), command=github_repo)
+    help_menu.add_separator()
+    help_menu.add_command(label=get_text(20), command=None)
+    menu.add_cascade(label=get_text(21), menu=help_menu)
 
     gui_frame = tk.Frame(window, background=get_setting('background_color'))
     gui_frame.pack()
