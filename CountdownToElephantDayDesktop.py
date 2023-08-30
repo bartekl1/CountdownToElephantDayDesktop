@@ -162,6 +162,19 @@ def get_text(text_number):
         return ENGLISH_TEXT[text_number]
 
 
+def rgb_to_hex(r, g, b):
+    return '#{:02x}{:02x}{:02x}'.format(r, g, b)
+
+
+def hex_to_rgb(hex):
+    rgb = []
+    for i in (0, 2, 4):
+        decimal = int(hex[i:i+2], 16)
+        rgb.append(decimal)
+
+    return tuple(rgb)
+
+
 def countdown():
     now = datetime.datetime.now(tz)
 
@@ -392,71 +405,124 @@ def change_color(element):
 
     color = colorchooser.askcolor(title=get_text(57),
                                   initialcolor=initial_color)
-    
-    if element == 'background':
-        background_color_var.set(color[1])
 
-        window.config(bg=color[1])
-        gui_frame.config(bg=color[1])
-        title_frame.config(bg=color[1])
-        title_label.config(bg=color[1])
-        icon_label.config(bg=color[1])
-        today_title_label.config(bg=color[1])
-        today_label.config(bg=color[1])
-        elephant_day_title_label.config(bg=color[1])
-        elephant_day_label.config(bg=color[1])
-        left_header_label.config(bg=color[1])
-        days_label.config(bg=color[1])
-        hours_label.config(bg=color[1])
-        minutes_label.config(bg=color[1])
-        seconds_label.config(bg=color[1])
-        milliseconds_label.config(bg=color[1])
-    elif element == 'title':
-        title_color_var.set(color[1])
+    if color[1] is not None:
+        if element == 'background':
+            background_color_var.set(color[1])
+            transparent_background_var.set(False)
 
-        title_label.config(fg=color[1])
-    elif element == 'date_title':
-        date_title_color_var.set(color[1])
+            window.config(bg=color[1])
+            gui_frame.config(bg=color[1])
+            title_frame.config(bg=color[1])
+            title_label.config(bg=color[1])
+            icon_label.config(bg=color[1])
+            today_title_label.config(bg=color[1])
+            today_label.config(bg=color[1])
+            elephant_day_title_label.config(bg=color[1])
+            elephant_day_label.config(bg=color[1])
+            left_header_label.config(bg=color[1])
+            days_label.config(bg=color[1])
+            hours_label.config(bg=color[1])
+            minutes_label.config(bg=color[1])
+            seconds_label.config(bg=color[1])
+            milliseconds_label.config(bg=color[1])
+        elif element == 'title':
+            title_color_var.set(color[1])
 
-        today_title_label.config(fg=color[1])
-        elephant_day_title_label.config(fg=color[1])
-    elif element == 'date':
-        date_color_var.set(color[1])
+            title_label.config(fg=color[1])
+        elif element == 'date_title':
+            date_title_color_var.set(color[1])
 
-        today_label.config(fg=color[1])
-        elephant_day_label.config(fg=color[1])
-    elif element == 'left_header':
-        left_header_color_var.set(color[1])
+            today_title_label.config(fg=color[1])
+            elephant_day_title_label.config(fg=color[1])
+        elif element == 'date':
+            date_color_var.set(color[1])
 
-        left_header_label.config(fg=color[1])
-    elif element == 'unit_labels':
-        unit_labels_color_var.set(color[1])
+            today_label.config(fg=color[1])
+            elephant_day_label.config(fg=color[1])
+        elif element == 'left_header':
+            left_header_color_var.set(color[1])
 
-        days_label.config(fg=color[1])
-        hours_label.config(fg=color[1])
-        minutes_label.config(fg=color[1])
-        seconds_label.config(fg=color[1])
-        milliseconds_label.config(fg=color[1])
-    elif element == 'countdown_text':
-        countdown_text_color_var.set(color[1])
+            left_header_label.config(fg=color[1])
+        elif element == 'unit_labels':
+            unit_labels_color_var.set(color[1])
 
-        days_countdown.config(fg=color[1])
-        hours_countdown.config(fg=color[1])
-        minutes_countdown.config(fg=color[1])
-        seconds_countdown.config(fg=color[1])
-        milliseconds_countdown.config(fg=color[1])
-    elif element == 'countdown_background':
-        countdown_background_color_var.set(color[1])
+            days_label.config(fg=color[1])
+            hours_label.config(fg=color[1])
+            minutes_label.config(fg=color[1])
+            seconds_label.config(fg=color[1])
+            milliseconds_label.config(fg=color[1])
+        elif element == 'countdown_text':
+            countdown_text_color_var.set(color[1])
 
-        days_countdown.config(bg=color[1])
-        hours_countdown.config(bg=color[1])
-        minutes_countdown.config(bg=color[1])
-        seconds_countdown.config(bg=color[1])
-        milliseconds_countdown.config(bg=color[1])
+            days_countdown.config(fg=color[1])
+            hours_countdown.config(fg=color[1])
+            minutes_countdown.config(fg=color[1])
+            seconds_countdown.config(fg=color[1])
+            milliseconds_countdown.config(fg=color[1])
+        elif element == 'countdown_background':
+            countdown_background_color_var.set(color[1])
+
+            days_countdown.config(bg=color[1])
+            hours_countdown.config(bg=color[1])
+            minutes_countdown.config(bg=color[1])
+            seconds_countdown.config(bg=color[1])
+            milliseconds_countdown.config(bg=color[1])
 
 
 def transparent_background():
-    pass
+    if transparent_background_var.get():
+        color = '#fefefe'
+
+        while True:
+            if color in [title_color_var.get(),
+                         date_title_color_var.get(),
+                         date_color_var.get(), left_header_color_var.get(),
+                         countdown_text_color_var.get(),
+                         countdown_background_color_var.get(),
+                         unit_labels_color_var.get()]:
+                rgb = hex_to_rgb(color[1:])
+                color = rgb_to_hex(rgb[0] - 1, rgb[1] - 1, rgb[2] - 1)
+            else:
+                break
+
+        window.config(bg=color)
+        gui_frame.config(bg=color)
+        title_frame.config(bg=color)
+        title_label.config(bg=color)
+        icon_label.config(bg=color)
+        today_title_label.config(bg=color)
+        today_label.config(bg=color)
+        elephant_day_title_label.config(bg=color)
+        elephant_day_label.config(bg=color)
+        left_header_label.config(bg=color)
+        days_label.config(bg=color)
+        hours_label.config(bg=color)
+        minutes_label.config(bg=color)
+        seconds_label.config(bg=color)
+        milliseconds_label.config(bg=color)
+
+        window.wm_attributes('-transparentcolor', color)
+    else:
+        color = background_color_var.get()
+
+        window.config(bg=color)
+        gui_frame.config(bg=color)
+        title_frame.config(bg=color)
+        title_label.config(bg=color)
+        icon_label.config(bg=color)
+        today_title_label.config(bg=color)
+        today_label.config(bg=color)
+        elephant_day_title_label.config(bg=color)
+        elephant_day_label.config(bg=color)
+        left_header_label.config(bg=color)
+        days_label.config(bg=color)
+        hours_label.config(bg=color)
+        minutes_label.config(bg=color)
+        seconds_label.config(bg=color)
+        milliseconds_label.config(bg=color)
+
+        window.wm_attributes('-transparentcolor', None)
 
 
 def main():
