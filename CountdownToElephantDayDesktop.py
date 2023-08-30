@@ -1,19 +1,20 @@
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
-import ctypes
+
+from babel.dates import format_date
 import requests
+import pytz
+import tzlocal
+
+import ctypes
 import locale
 import sys
 import os
 import platform
-import subprocess
 import webbrowser
 import threading
-import pytz
-import tzlocal
 import datetime
-from babel.dates import format_date
 import json
 
 VERSION = '2.0'
