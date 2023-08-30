@@ -373,6 +373,16 @@ def main():
         milliseconds_label, tz, full_screen_var, always_on_top_var, \
         transparency_var, snap_direction_var
 
+    system = platform.system()
+
+    if system != 'Windows':
+        support_info = '''This system is not supported.
+This program works only on Windows.
+Linux support is planned.'''
+        messagebox.showerror('Error', support_info)
+
+        return
+
     windll = ctypes.windll.kernel32
     language = locale.windows_locale[windll.GetUserDefaultUILanguage()]
 
