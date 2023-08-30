@@ -57,7 +57,8 @@ POLISH_TEXT = [
     'Czy chcesz ją pobrać?',
     'Pełny ekran',
     'Okno',
-    'Zawsze na wierzchu'
+    'Zawsze na wierzchu',
+    'Przezroczystość'
 ]
 
 ENGLISH_TEXT = [
@@ -95,7 +96,8 @@ ENGLISH_TEXT = [
     'Do you want to download it?',
     'Full screen',
     'Window',
-    'Always on top'
+    'Always on top',
+    'Transparency'
 ]
 
 
@@ -307,13 +309,18 @@ def always_on_top():
     window.attributes('-topmost', always_on_top_var.get())
 
 
+def transparency():
+    window.attributes('-alpha', 1 - transparency_var.get())
+
+
 def main():
     global language, window, gui_frame, title_frame, title_label, icon_label, \
         today_title_label, today_label, elephant_day_title_label, \
         elephant_day_label, left_header_label, days_countdown, days_label, \
         hours_countdown, hours_label, minutes_countdown, minutes_label, \
         seconds_countdown, seconds_label, milliseconds_countdown, \
-        milliseconds_label, tz, full_screen_var, always_on_top_var
+        milliseconds_label, tz, full_screen_var, always_on_top_var, \
+        transparency_var
 
     windll = ctypes.windll.kernel32
     language = locale.windows_locale[windll.GetUserDefaultUILanguage()]
@@ -332,6 +339,7 @@ def main():
 
     full_screen_var = tk.BooleanVar(window, False)
     always_on_top_var = tk.BooleanVar(window, False)
+    transparency_var = tk.DoubleVar(window, 0)
 
     menu = tk.Menu(window)
     window.config(menu=menu)
@@ -346,6 +354,50 @@ def main():
     window_menu.add_checkbutton(label=get_text(35),
                                 variable=always_on_top_var,
                                 command=always_on_top)
+
+    transparency_menu = tk.Menu(window_menu, tearoff=0)
+    transparency_menu.add_radiobutton(label='0%',
+                                      var=transparency_var,
+                                      value=0,
+                                      command=transparency)
+    transparency_menu.add_radiobutton(label='10%',
+                                      var=transparency_var,
+                                      value=0.1,
+                                      command=transparency)
+    transparency_menu.add_radiobutton(label='20%',
+                                      var=transparency_var,
+                                      value=0.2,
+                                      command=transparency)
+    transparency_menu.add_radiobutton(label='30%',
+                                      var=transparency_var,
+                                      value=0.3,
+                                      command=transparency)
+    transparency_menu.add_radiobutton(label='40%',
+                                      var=transparency_var,
+                                      value=0.4,
+                                      command=transparency)
+    transparency_menu.add_radiobutton(label='50%',
+                                      var=transparency_var,
+                                      value=0.5,
+                                      command=transparency)
+    transparency_menu.add_radiobutton(label='60%',
+                                      var=transparency_var,
+                                      value=0.6,
+                                      command=transparency)
+    transparency_menu.add_radiobutton(label='70%',
+                                      var=transparency_var,
+                                      value=0.7,
+                                      command=transparency)
+    transparency_menu.add_radiobutton(label='80%',
+                                      var=transparency_var,
+                                      value=0.8,
+                                      command=transparency)
+    transparency_menu.add_radiobutton(label='90%',
+                                      var=transparency_var,
+                                      value=0.9,
+                                      command=transparency)
+    window_menu.add_cascade(label=get_text(36), menu=transparency_menu)
+
     menu.add_cascade(label=get_text(34), menu=window_menu)
 
     help_menu = tk.Menu(menu, tearoff=0)
