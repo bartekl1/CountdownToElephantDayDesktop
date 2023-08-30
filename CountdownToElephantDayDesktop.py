@@ -315,6 +315,9 @@ def check_for_updates(information=True):
                 'etag': r.headers.get('etag')
             }
 
+            if not os.path.isdir(os.path.split(fp)[0]):
+                os.makedirs(os.path.split(fp)[0])
+
             with open(fp, 'w') as file:
                 json.dump(newest_version, file, indent=4)
         elif r.status_code == 304:
